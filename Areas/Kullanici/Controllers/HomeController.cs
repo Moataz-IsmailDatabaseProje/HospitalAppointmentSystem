@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace HastaneRandevuSistemi.Controllers
 {
+    [Area("Kullanici")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

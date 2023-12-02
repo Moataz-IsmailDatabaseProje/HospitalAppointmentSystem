@@ -2,101 +2,98 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HastaneRandevuSistemi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using HastaneRandevuSistemi.Models;
 
 namespace HastaneRandevuSistemi.Controllers
 {
-    public class RandevuController : Controller
+    [Area("Admin")]
+    public class PoliklinikController : Controller
     {
         private readonly EFHastaneRandevuContext _context;
 
-        public RandevuController(EFHastaneRandevuContext context)
+        public PoliklinikController(EFHastaneRandevuContext context)
         {
             _context = context;
         }
 
-        // GET: Randevu
+        // GET: Poliklinik
         public async Task<IActionResult> Index()
         {
-            var eFHastaneRandevuContext = _context.Randevular.Include(r => r.Doktor).Include(r => r.Kullanici);
+            var eFHastaneRandevuContext = _context.Poliklinikler.Include(p => p.AnaBilimDali);
             return View(await eFHastaneRandevuContext.ToListAsync());
         }
 
-        // GET: Randevu/Details/5
+        // GET: Poliklinik/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Randevular == null)
+            if (id == null || _context.Poliklinikler == null)
             {
                 return NotFound();
             }
 
-            var randevu = await _context.Randevular
-                .Include(r => r.Doktor)
-                .Include(r => r.Kullanici)
+            var poliklinik = await _context.Poliklinikler
+                .Include(p => p.AnaBilimDali)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (randevu == null)
+            if (poliklinik == null)
             {
                 return NotFound();
             }
 
-            return View(randevu);
+            return View(poliklinik);
         }
 
-        // GET: Randevu/Create
+        // GET: Poliklinik/Create
         public IActionResult Create()
         {
-            ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Id");
-            ViewData["KullaniciId"] = new SelectList(_context.Kullaniciler, "Id", "Id");
+            ViewData["AnaBilimDaliId"] = new SelectList(_context.AnaBilimDaliler, "Id", "Id");
             return View();
         }
 
-        // POST: Randevu/Create
+        // POST: Poliklinik/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Tarih,DoktorId,KullaniciId")] Randevu randevu)
+        public async Task<IActionResult> Create([Bind("Id,Adi,AnaBilimDaliId")] Poliklinik poliklinik)
         {
             if (ModelState.IsValid || true)
             {
-                _context.Add(randevu);
+                _context.Add(poliklinik);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Id", randevu.DoktorId);
-            ViewData["KullaniciId"] = new SelectList(_context.Kullaniciler, "Id", "Id", randevu.KullaniciId);
-            return View(randevu);
+            ViewData["AnaBilimDaliId"] = new SelectList(_context.AnaBilimDaliler, "Id", "Id", poliklinik.AnaBilimDaliId);
+            return View(poliklinik);
         }
 
-        // GET: Randevu/Edit/5
+        // GET: Poliklinik/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Randevular == null)
+            if (id == null || _context.Poliklinikler == null)
             {
                 return NotFound();
             }
 
-            var randevu = await _context.Randevular.FindAsync(id);
-            if (randevu == null)
+            var poliklinik = await _context.Poliklinikler.FindAsync(id);
+            if (poliklinik == null)
             {
                 return NotFound();
             }
-            ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Id", randevu.DoktorId);
-            ViewData["KullaniciId"] = new SelectList(_context.Kullaniciler, "Id", "Id", randevu.KullaniciId);
-            return View(randevu);
+            ViewData["AnaBilimDaliId"] = new SelectList(_context.AnaBilimDaliler, "Id", "Id", poliklinik.AnaBilimDaliId);
+            return View(poliklinik);
         }
 
-        // POST: Randevu/Edit/5
+        // POST: Poliklinik/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Tarih,DoktorId,KullaniciId")] Randevu randevu)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Adi,AnaBilimDaliId")] Poliklinik poliklinik)
         {
-            if (id != randevu.Id)
+            if (id != poliklinik.Id)
             {
                 return NotFound();
             }
@@ -105,12 +102,12 @@ namespace HastaneRandevuSistemi.Controllers
             {
                 try
                 {
-                    _context.Update(randevu);
+                    _context.Update(poliklinik);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RandevuExists(randevu.Id))
+                    if (!PoliklinikExists(poliklinik.Id))
                     {
                         return NotFound();
                     }
@@ -121,53 +118,51 @@ namespace HastaneRandevuSistemi.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Id", randevu.DoktorId);
-            ViewData["KullaniciId"] = new SelectList(_context.Kullaniciler, "Id", "Id", randevu.KullaniciId);
-            return View(randevu);
+            ViewData["AnaBilimDaliId"] = new SelectList(_context.AnaBilimDaliler, "Id", "Id", poliklinik.AnaBilimDaliId);
+            return View(poliklinik);
         }
 
-        // GET: Randevu/Delete/5
+        // GET: Poliklinik/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Randevular == null)
+            if (id == null || _context.Poliklinikler == null)
             {
                 return NotFound();
             }
 
-            var randevu = await _context.Randevular
-                .Include(r => r.Doktor)
-                .Include(r => r.Kullanici)
+            var poliklinik = await _context.Poliklinikler
+                .Include(p => p.AnaBilimDali)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (randevu == null)
+            if (poliklinik == null)
             {
                 return NotFound();
             }
 
-            return View(randevu);
+            return View(poliklinik);
         }
 
-        // POST: Randevu/Delete/5
+        // POST: Poliklinik/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Randevular == null)
+            if (_context.Poliklinikler == null)
             {
-                return Problem("Entity set 'EFHastaneRandevuContext.Randevular'  is null.");
+                return Problem("Entity set 'EFHastaneRandevuContext.Poliklinikler'  is null.");
             }
-            var randevu = await _context.Randevular.FindAsync(id);
-            if (randevu != null)
+            var poliklinik = await _context.Poliklinikler.FindAsync(id);
+            if (poliklinik != null)
             {
-                _context.Randevular.Remove(randevu);
+                _context.Poliklinikler.Remove(poliklinik);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RandevuExists(int id)
+        private bool PoliklinikExists(int id)
         {
-          return (_context.Randevular?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Poliklinikler?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

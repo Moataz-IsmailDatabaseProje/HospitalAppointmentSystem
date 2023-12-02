@@ -9,90 +9,88 @@ using HastaneRandevuSistemi.Models;
 
 namespace HastaneRandevuSistemi.Controllers
 {
-    public class DoktorController : Controller
+    [Area("Admin")]
+    public class KullaniciController : Controller
     {
         private readonly EFHastaneRandevuContext _context;
 
-        public DoktorController(EFHastaneRandevuContext context)
+        public KullaniciController(EFHastaneRandevuContext context)
         {
             _context = context;
         }
 
-        // GET: Doktor
+        // GET: Kullanici
         public async Task<IActionResult> Index()
         {
-            var eFHastaneRandevuContext = _context.Doktorlar.Include(d => d.Poliklinik);
-            return View(await eFHastaneRandevuContext.ToListAsync());
+              return _context.Kullaniciler != null ? 
+                          View(await _context.Kullaniciler.ToListAsync()) :
+                          Problem("Entity set 'EFHastaneRandevuContext.Kullaniciler'  is null.");
         }
 
-        // GET: Doktor/Details/5
+        // GET: Kullanici/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Doktorlar == null)
+            if (id == null || _context.Kullaniciler == null)
             {
                 return NotFound();
             }
 
-            var doktor = await _context.Doktorlar
-                .Include(d => d.Poliklinik)
+            var kullanici = await _context.Kullaniciler
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (doktor == null)
+            if (kullanici == null)
             {
                 return NotFound();
             }
 
-            return View(doktor);
+            return View(kullanici);
         }
 
-        // GET: Doktor/Create
+        // GET: Kullanici/Create
         public IActionResult Create()
         {
-            ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "Id");
             return View();
         }
 
-        // POST: Doktor/Create
+        // POST: Kullanici/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Adi,Soyadi,CalismaGunleri,CalismaSaatleri,PoliklinikId")] Doktor doktor)
+        public async Task<IActionResult> Create([Bind("Id,KullaniciAdi,Sifre")] Kullanici kullanici)
         {
             if (ModelState.IsValid || true)
             {
-                _context.Add(doktor);
+                _context.Add(kullanici);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "Id", doktor.PoliklinikId);
-            return View(doktor);
+            return View(kullanici);
         }
 
-        // GET: Doktor/Edit/5
+        // GET: Kullanici/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Doktorlar == null)
+            if (id == null || _context.Kullaniciler == null)
             {
                 return NotFound();
             }
 
-            var doktor = await _context.Doktorlar.FindAsync(id);
-            if (doktor == null)
+            var kullanici = await _context.Kullaniciler.FindAsync(id);
+            if (kullanici == null)
             {
                 return NotFound();
             }
-            ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "Id", doktor.PoliklinikId);
-            return View(doktor);
+            return View(kullanici);
         }
 
-        // POST: Doktor/Edit/5
+        // POST: Kullanici/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Adi,Soyadi,CalismaGunleri,CalismaSaatleri,PoliklinikId")] Doktor doktor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,KullaniciAdi,Sifre")] Kullanici kullanici)
         {
-            if (id != doktor.Id)
+            if (id != kullanici.Id)
             {
                 return NotFound();
             }
@@ -101,12 +99,12 @@ namespace HastaneRandevuSistemi.Controllers
             {
                 try
                 {
-                    _context.Update(doktor);
+                    _context.Update(kullanici);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DoktorExists(doktor.Id))
+                    if (!KullaniciExists(kullanici.Id))
                     {
                         return NotFound();
                     }
@@ -117,51 +115,49 @@ namespace HastaneRandevuSistemi.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "Id", doktor.PoliklinikId);
-            return View(doktor);
+            return View(kullanici);
         }
 
-        // GET: Doktor/Delete/5
+        // GET: Kullanici/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Doktorlar == null)
+            if (id == null || _context.Kullaniciler == null)
             {
                 return NotFound();
             }
 
-            var doktor = await _context.Doktorlar
-                .Include(d => d.Poliklinik)
+            var kullanici = await _context.Kullaniciler
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (doktor == null)
+            if (kullanici == null)
             {
                 return NotFound();
             }
 
-            return View(doktor);
+            return View(kullanici);
         }
 
-        // POST: Doktor/Delete/5
+        // POST: Kullanici/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Doktorlar == null)
+            if (_context.Kullaniciler == null)
             {
-                return Problem("Entity set 'EFHastaneRandevuContext.Doktorlar'  is null.");
+                return Problem("Entity set 'EFHastaneRandevuContext.Kullaniciler'  is null.");
             }
-            var doktor = await _context.Doktorlar.FindAsync(id);
-            if (doktor != null)
+            var kullanici = await _context.Kullaniciler.FindAsync(id);
+            if (kullanici != null)
             {
-                _context.Doktorlar.Remove(doktor);
+                _context.Kullaniciler.Remove(kullanici);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DoktorExists(int id)
+        private bool KullaniciExists(int id)
         {
-          return (_context.Doktorlar?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Kullaniciler?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

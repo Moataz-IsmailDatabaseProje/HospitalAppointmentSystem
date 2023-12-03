@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HastaneRandevuSistemi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HastaneRandevuSistemi.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class DoktorController : Controller
     {
         private readonly EFHastaneRandevuContext _context;

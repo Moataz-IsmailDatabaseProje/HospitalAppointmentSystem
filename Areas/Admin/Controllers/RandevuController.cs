@@ -51,8 +51,8 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
         // GET: Randevu/Create
         public IActionResult Create()
         {
-            ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Id");
-            ViewData["KullaniciId"] = new SelectList(_context.Kullaniciler, "Id", "Id");
+            ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Adi");
+            ViewData["KullaniciId"] = new SelectList(_context.Kullaniciler, "Id", "KullaniciAdi");
             return View();
         }
 
@@ -69,8 +69,8 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Id", randevu.DoktorId);
-            ViewData["KullaniciId"] = new SelectList(_context.Kullaniciler, "Id", "Id", randevu.KullaniciId);
+            ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Adi", randevu.DoktorId);
+            ViewData["KullaniciId"] = new SelectList(_context.Kullaniciler, "Id", "KullaniciAdi", randevu.KullaniciId);
             return View(randevu);
         }
 
@@ -87,8 +87,8 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Id", randevu.DoktorId);
-            ViewData["KullaniciId"] = new SelectList(_context.Kullaniciler, "Id", "Id", randevu.KullaniciId);
+            ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Adi", randevu.DoktorId);
+            ViewData["KullaniciId"] = new SelectList(_context.Kullaniciler, "Id", "KullaniciAdi", randevu.KullaniciId);
             return View(randevu);
         }
 
@@ -124,8 +124,8 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Id", randevu.DoktorId);
-            ViewData["KullaniciId"] = new SelectList(_context.Kullaniciler, "Id", "Id", randevu.KullaniciId);
+            ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Adi", randevu.DoktorId);
+            ViewData["KullaniciId"] = new SelectList(_context.Kullaniciler, "Id", "KullaniciAdi", randevu.KullaniciId);
             return View(randevu);
         }
 

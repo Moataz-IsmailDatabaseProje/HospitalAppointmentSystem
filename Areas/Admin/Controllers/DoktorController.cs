@@ -24,6 +24,7 @@ namespace HastaneRandevuSistemi.Controllers
         // GET: Doktor
         public async Task<IActionResult> Index()
         {
+
             var eFHastaneRandevuContext = _context.Doktorlar.Include(d => d.Poliklinik);
             return View(await eFHastaneRandevuContext.ToListAsync());
         }
@@ -50,7 +51,7 @@ namespace HastaneRandevuSistemi.Controllers
         // GET: Doktor/Create
         public IActionResult Create()
         {
-            ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "Id");
+            ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "Adi");
             return View();
         }
 
@@ -67,7 +68,7 @@ namespace HastaneRandevuSistemi.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "Id", doktor.PoliklinikId);
+            ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "Adi", doktor.PoliklinikId);
             return View(doktor);
         }
 
@@ -84,7 +85,7 @@ namespace HastaneRandevuSistemi.Controllers
             {
                 return NotFound();
             }
-            ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "Id", doktor.PoliklinikId);
+            ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "Adi", doktor.PoliklinikId);
             return View(doktor);
         }
 

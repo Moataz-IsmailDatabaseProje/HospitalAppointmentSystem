@@ -24,6 +24,7 @@ namespace HastaneRandevuSistemi.Controllers
         // GET: Poliklinik
         public async Task<IActionResult> Index()
         {
+            ViewData["AnaBilimDaliId"] = new SelectList(_context.AnaBilimDaliler, "Id", "Adi");
             var eFHastaneRandevuContext = _context.Poliklinikler.Include(p => p.AnaBilimDali);
             return View(await eFHastaneRandevuContext.ToListAsync());
         }
@@ -50,7 +51,7 @@ namespace HastaneRandevuSistemi.Controllers
         // GET: Poliklinik/Create
         public IActionResult Create()
         {
-            ViewData["AnaBilimDaliId"] = new SelectList(_context.AnaBilimDaliler, "Id", "Id");
+            ViewData["AnaBilimDaliId"] = new SelectList(_context.AnaBilimDaliler, "Id", "Adi");
             return View();
         }
 
@@ -67,7 +68,7 @@ namespace HastaneRandevuSistemi.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AnaBilimDaliId"] = new SelectList(_context.AnaBilimDaliler, "Id", "Id", poliklinik.AnaBilimDaliId);
+            ViewData["AnaBilimDaliId"] = new SelectList(_context.AnaBilimDaliler, "Id", "Adi", poliklinik.AnaBilimDaliId);
             return View(poliklinik);
         }
 
@@ -84,7 +85,7 @@ namespace HastaneRandevuSistemi.Controllers
             {
                 return NotFound();
             }
-            ViewData["AnaBilimDaliId"] = new SelectList(_context.AnaBilimDaliler, "Id", "Id", poliklinik.AnaBilimDaliId);
+            ViewData["AnaBilimDaliId"] = new SelectList(_context.AnaBilimDaliler, "Id", "Adi", poliklinik.AnaBilimDaliId);
             return View(poliklinik);
         }
 
@@ -120,7 +121,7 @@ namespace HastaneRandevuSistemi.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AnaBilimDaliId"] = new SelectList(_context.AnaBilimDaliler, "Id", "Id", poliklinik.AnaBilimDaliId);
+            ViewData["AnaBilimDaliId"] = new SelectList(_context.AnaBilimDaliler, "Id", "Adi", poliklinik.AnaBilimDaliId);
             return View(poliklinik);
         }
 

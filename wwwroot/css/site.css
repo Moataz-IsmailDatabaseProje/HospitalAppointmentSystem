@@ -16,3 +16,113 @@ html {
 body {
   margin-bottom: 60px;
 }
+body {
+    background-color: #f8f9fa; /* Light gray background */
+}
+
+.navbar {
+    background-color: #28a745; /* Light green navbar */
+}
+
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus {
+    background-color: #28a745 !important; /* Override Bootstrap button color */
+    border-color: #28a745 !important;
+}
+
+/* Custom status colors */
+.status-past {
+    color: red;
+}
+
+.status-future {
+    color: green;
+}
+
+   body {
+      background-color: #f8f9fa; /* Light gray background */
+    }
+
+    .navbar {
+      background-color: #28a745; /* Light green navbar */
+    }
+
+    .jumbotron h1 {
+      font-size: 3.5em;
+    }
+
+    .btn-primary {
+      background-color: #28a745 !important; /* Override Bootstrap button color */
+      border-color: #28a745 !important;
+      font-size: 1.5em;
+    }
+
+    .feature-box {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    .feature-box img {
+      max-width: 100%;
+      height: auto;
+    }
+
+#sidebar {
+    background-color: #343a40;
+    color: #fff;
+    min-height: 100vh;
+}
+
+    #sidebar .navbar-brand {
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    #sidebar .nav-link {
+        color: #adb5bd;
+    }
+
+        #sidebar .nav-link:hover {
+            color: #fff;
+        }
+
+#content {
+    margin-top: 60px; /* Adjusted margin to prevent content overlap with the fixed navbar */
+    padding: 20px;
+}
+
+.card {
+    margin-bottom: 20px;
+}
+
+#sidebar {
+    background-color: #343a40;
+    color: #fff;
+    min-height: 100vh;
+}
+
+    #sidebar .navbar-brand {
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    #sidebar .nav-link {
+        color: #adb5bd;
+    }
+
+        #sidebar .nav-link:hover {
+            color: #fff;
+        }
+
+#content {
+    margin-top: 60px; /* Adjusted margin to prevent content overlap with the fixed navbar */
+    padding: 20px;
+}
+
+.card {
+    margin-bottom: 20px;
+}

@@ -4,13 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - HastaneRandevuSistemi</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-6Eae1JiCEuwfoJ+9fyFfOEAgzTSp18p+t9fGvS5KTOqdvOksfpBUxu0BhMoPZrW6aCaY4Rk5t5Z6vQ5NVCP/4A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HastaneRandevuSistemi.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">HastaneRandevuSistemi</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -23,7 +25,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Kullanici" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        @if (User.IsInRole(SD.Role_Admin))
+                       @*  @if (User.IsInRole(SD.Role_Admin))
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
@@ -48,7 +50,7 @@
                                     <li><hr class="dropdown-divider"></li>
                                 </ul>
                             </li>
-                        }
+                        } *@
                        
                     </ul>
                     <partial name="_LoginPartial" />
@@ -56,11 +58,12 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    @* <div class="container">  *@
+        @RenderBody()
+        @* <main role="main" class="pb-3">
+            
+        @* </main> *@
+    @* </div> *@
 
     <footer class="border-top footer text-muted">
         <div class="container">

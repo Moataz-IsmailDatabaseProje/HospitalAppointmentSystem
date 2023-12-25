@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using HastaneRandevuSistemi.Models;
 using Microsoft.AspNetCore.Authorization;
 
-namespace HastaneRandevuSistemi.Areas.Admin.Controllers
+namespace HastaneRandevuSistemi.Areas.Kullanici.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = SD.Role_Admin)]

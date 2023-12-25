@@ -1,4 +1,6 @@
-﻿namespace HastaneRandevuSistemi.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HastaneRandevuSistemi.Models
 {
     public class Doktor
     {

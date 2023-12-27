@@ -45,16 +45,16 @@
                 <!-- Page Content -->
                 <div id="content" class="w-100">
                     <h2 class="mb-4">Randevular Listesi</h2>
-                    <a asp-action="Create" class="btn btn-primary">Create New</a>
+                    <a asp-action="Create" class="btn btn-primary">Yeni Oluştur</a>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped">
                             <thead class="thead-dark">
                                 <tr>
                                     <th>Tarih</th>
                                     <th>Doktor</th>
-                                    <th>User</th>
+                                    <th>Kullanıcı</th>
                                     <th>Poliklinik</th>
-                                    <th>Actions</th>
+                                    <th>Harekatler</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -66,9 +66,9 @@
                                         <td>@Html.DisplayFor(modelItem => item.User.UserName)</td>
                                         <td>@Html.DisplayFor(modelItem => item.Poliklinik.Adi)</td>
                                         <td>
-                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
-                                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
-                                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Düzelt</a>
+                                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detayler</a>
+                                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Sil</a>
                                         </td>
                                     </tr>
                                 }

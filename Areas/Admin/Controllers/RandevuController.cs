@@ -71,17 +71,52 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Tarih,DoktorId,UserId,PoliklinikId")] Randevu randevu)
         {
-            if (ModelState.IsValid || true)
+            bool hataVar = false;
+            var appointmentDate = _context.Randevular.Where(x => x.Tarih == randevu.Tarih).Count();
+            if (appointmentDate != 0)
             {
-                _context.Add(randevu);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ViewBag.Mesaj = "Hata doktorun bu saate başka bir randevusu var!";
+                hataVar = true;
             }
-            ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Adi", randevu.DoktorId);
-            ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "Adi", randevu.PoliklinikId);
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "UserName", randevu.UserId);
-            return View(randevu);
+
+            if (randevu.Tarih.Hour < 09.00 || randevu.Tarih.Hour > 17.00)
+            {
+                ViewBag.Mesaj = "9.00 - 17.00 arası olmalı";
+                hataVar = true;
+            }
+
+            if (randevu.Tarih.DayOfWeek == DayOfWeek.Sunday || randevu.Tarih.DayOfWeek == DayOfWeek.Saturday)
+            {
+                ViewBag.Mesaj = "Hafta İçi Randevu Alınız!";
+                hataVar = true;
+            }
+
+            if (randevu.Tarih.Date < DateTime.Today)
+            {
+                ViewBag.Mesaj = "Geçmiş Zamana Randevu alınmaz!";
+                hataVar = true;
+            }
+
+            if (hataVar)
+            {
+                ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "Adi", randevu.PoliklinikId);
+                ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Adi", randevu.DoktorId);
+                ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "UserName", randevu.UserId);
+                ViewBag.PoliklinikAdi = new SelectList(_context.Poliklinikler, "Id", "Adi", randevu.PoliklinikId);
+                ViewBag.DoktorAdi = new SelectList(_context.Doktorlar, "Id", "Adi", randevu.DoktorId);
+                ViewBag.UserName = new SelectList(_context.ApplicationUsers, "Id", "UserName", randevu.UserId);
+
+                return View(randevu);
+            }
+
+            // Continue with the rest of the code for saving the changes
+            _context.Add(randevu);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+
+
         }
+
 
         // GET: Admin/Randevu/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -114,7 +149,33 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid || true)
+            bool hataVar = false;
+            var appointmentDate = _context.Randevular.Where(x => x.Tarih == randevu.Tarih && x.Id != id).Count();
+            if (appointmentDate != 0)
+            {
+                ViewBag.Mesaj = "Bu saatte randevu vardır, lütfen başka bir saat deneyin.";
+                hataVar = true;
+            }
+
+            if (randevu.Tarih.Hour < 09.00 || randevu.Tarih.Hour > 17.00)
+            {
+                ViewBag.Mesaj = "9.00 - 17.00 arası olmalı";
+                hataVar = true;
+            }
+
+            if (randevu.Tarih.DayOfWeek == DayOfWeek.Sunday || randevu.Tarih.DayOfWeek == DayOfWeek.Saturday)
+            {
+                ViewBag.Mesaj = "Hafta İçi Randevu Alınız!";
+                hataVar = true;
+            }
+
+            if (randevu.Tarih.Date < DateTime.Today)
+            {
+                ViewBag.Mesaj = "Geçmiş Zamana Randevu alınmaz!";
+                hataVar = true;
+            }
+
+            if (!hataVar)
             {
                 try
                 {
@@ -134,11 +195,17 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Adi", randevu.DoktorId);
             ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "Adi", randevu.PoliklinikId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "UserName", randevu.UserId);
+            ViewBag.PoliklinikAdi = new SelectList(_context.Poliklinikler, "Id", "Adi", randevu.PoliklinikId);
+            ViewBag.DoktorAdi = new SelectList(_context.Doktorlar, "Id", "Adi", randevu.DoktorId);
+            ViewBag.UserName = new SelectList(_context.ApplicationUsers, "Id", "UserName", randevu.UserId);
+
             return View(randevu);
         }
+
 
         // GET: Admin/Randevu/Delete/5
         public async Task<IActionResult> Delete(int? id)

@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HastaneRandevuSistemi.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using HastaneRandevuSistemi.Models;
 
-namespace HastaneRandevuSistemi.Controllers
+namespace HastaneRandevuSistemi.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = SD.Role_Admin)]
     public class PoliklinikController : Controller
     {
         private readonly EFHastaneRandevuContext _context;
@@ -21,15 +19,15 @@ namespace HastaneRandevuSistemi.Controllers
             _context = context;
         }
 
-        // GET: Poliklinik
+        // GET: Admin/Poliklinik
         public async Task<IActionResult> Index()
         {
-            ViewData["AnaBilimDaliId"] = new SelectList(_context.AnaBilimDaliler, "Id", "Adi");
-            var eFHastaneRandevuContext = _context.Poliklinikler.Include(p => p.AnaBilimDali);
-            return View(await eFHastaneRandevuContext.ToListAsync());
+              return _context.Poliklinikler != null ? 
+                          View(await _context.Poliklinikler.ToListAsync()) :
+                          Problem("Entity set 'EFHastaneRandevuContext.Poliklinikler'  is null.");
         }
 
-        // GET: Poliklinik/Details/5
+        // GET: Admin/Poliklinik/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Poliklinikler == null)
@@ -38,7 +36,6 @@ namespace HastaneRandevuSistemi.Controllers
             }
 
             var poliklinik = await _context.Poliklinikler
-                .Include(p => p.AnaBilimDali)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (poliklinik == null)
             {
@@ -48,19 +45,18 @@ namespace HastaneRandevuSistemi.Controllers
             return View(poliklinik);
         }
 
-        // GET: Poliklinik/Create
+        // GET: Admin/Poliklinik/Create
         public IActionResult Create()
         {
-            ViewData["AnaBilimDaliId"] = new SelectList(_context.AnaBilimDaliler, "Id", "Adi");
             return View();
         }
 
-        // POST: Poliklinik/Create
+        // POST: Admin/Poliklinik/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Adi,AnaBilimDaliId")] Poliklinik poliklinik)
+        public async Task<IActionResult> Create([Bind("Id,Adi")] Poliklinik poliklinik)
         {
             if (ModelState.IsValid || true)
             {
@@ -68,11 +64,10 @@ namespace HastaneRandevuSistemi.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AnaBilimDaliId"] = new SelectList(_context.AnaBilimDaliler, "Id", "Adi", poliklinik.AnaBilimDaliId);
             return View(poliklinik);
         }
 
-        // GET: Poliklinik/Edit/5
+        // GET: Admin/Poliklinik/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Poliklinikler == null)
@@ -85,16 +80,15 @@ namespace HastaneRandevuSistemi.Controllers
             {
                 return NotFound();
             }
-            ViewData["AnaBilimDaliId"] = new SelectList(_context.AnaBilimDaliler, "Id", "Adi", poliklinik.AnaBilimDaliId);
             return View(poliklinik);
         }
 
-        // POST: Poliklinik/Edit/5
+        // POST: Admin/Poliklinik/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Adi,AnaBilimDaliId")] Poliklinik poliklinik)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Adi")] Poliklinik poliklinik)
         {
             if (id != poliklinik.Id)
             {
@@ -121,11 +115,10 @@ namespace HastaneRandevuSistemi.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AnaBilimDaliId"] = new SelectList(_context.AnaBilimDaliler, "Id", "Adi", poliklinik.AnaBilimDaliId);
             return View(poliklinik);
         }
 
-        // GET: Poliklinik/Delete/5
+        // GET: Admin/Poliklinik/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Poliklinikler == null)
@@ -134,7 +127,6 @@ namespace HastaneRandevuSistemi.Controllers
             }
 
             var poliklinik = await _context.Poliklinikler
-                .Include(p => p.AnaBilimDali)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (poliklinik == null)
             {
@@ -144,7 +136,7 @@ namespace HastaneRandevuSistemi.Controllers
             return View(poliklinik);
         }
 
-        // POST: Poliklinik/Delete/5
+        // POST: Admin/Poliklinik/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -158,14 +150,14 @@ namespace HastaneRandevuSistemi.Controllers
             {
                 _context.Poliklinikler.Remove(poliklinik);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool PoliklinikExists(int id)
         {
-            return (_context.Poliklinikler?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Poliklinikler?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

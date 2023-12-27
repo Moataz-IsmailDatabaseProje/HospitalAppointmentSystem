@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using System.ComponentModel.DataAnnotations;
 
 namespace HastaneRandevuSistemi.Models
@@ -9,6 +10,7 @@ namespace HastaneRandevuSistemi.Models
         public string Adi { get; set; }
         public string Soyadi { get; set; }
         public string? Sehir {  get; set; }
+        public List<Randevu> Randevular { get; set; }
 
     }
 }

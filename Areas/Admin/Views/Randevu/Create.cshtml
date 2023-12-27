@@ -22,8 +22,12 @@
                     <select asp-for="DoktorId" class="form-control" asp-items="ViewBag.DoktorId"></select>
                 </div>
                 <div class="form-group">
-                    <label asp-for="KullaniciId" class="control-label"></label>
-                    <select asp-for="KullaniciId" class="form-control" asp-items="ViewBag.KullaniciId"></select>
+                    <label asp-for="UserId" class="control-label"></label>
+                    <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PoliklinikId" class="control-label"></label>
+                    <select asp-for="PoliklinikId" class="form-control" asp-items="ViewBag.PoliklinikId"></select>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Create" class="btn btn-primary" />
@@ -33,7 +37,7 @@
     </div>
 
     <div>
-        <a asp-controller="Home" asp-action="Index">Back to Ana Sayfa</a>
+        <a asp-action="Index">Back to List</a>
     </div>
 </div>
 @section Scripts {

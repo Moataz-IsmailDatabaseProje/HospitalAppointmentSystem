@@ -10,8 +10,10 @@
         public Doktor Doktor { get; set; }
 
         // Randevu ile Kullanici arasında bir ilişki
-        public int KullaniciId { get; set; }
-        public Kullanici Kullanici { get; set; }
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
+        public int PoliklinikId { get; set; }
+        public Poliklinik Poliklinik { get; set; }
     }
 
 }

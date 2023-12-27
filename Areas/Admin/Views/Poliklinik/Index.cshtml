@@ -3,89 +3,73 @@
 @{
     ViewData["Title"] = "Index";
 }
+    <div>
+        @if (User.IsInRole(SD.Role_Admin))
+        {
+            <div class="container-fluid">
+                <div class="d-flex" id="wrapper">
+                    <!-- Sidebar -->
+                    <div id="sidebar" class="bg-dark">
+                        <div class="p-4">
+                            <h1 class="navbar-brand">Admin Panel</h1>
+                            <ul class="nav flex-column">
+                                <li class="nav-item">
+                                    <div class="d-flex align-items-center">
+                                        <img src="~/icons/hospital-solid.svg" class="mr-2" />
+                                        <a class="nav-link text-light" asp-area="Admin" asp-controller="Poliklinik" asp-action="Index">Poliklinikler</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item">
+                                    <div class="d-flex align-items-center">
+                                        <img src="~/icons/user-doctor-solid.svg" class="mr-2" />
+                                        <a class="nav-link text-light" asp-area="Admin" asp-controller="Doktor" asp-action="Index">Doktorlar</a>
+                                    </div>
+                                </li>
+                                @*     <li class="nav-item">
+                            <div class="d-flex align-items-center">
+                            <img src="~/icons/user-solid.svg" class="mr-2" />
+                            <a class="nav-link text-light" asp-area="Admin" asp-controller="Kullanici" asp-action="Index">Kullanıcılar</a>
+                            </div>
+                            </li> *@
+                                <li class="nav-item">
+                                    <div class="d-flex align-items-center">
+                                        <img src="~/icons/calendar-check-solid.svg" class="mr-2" />
+                                        <a class="nav-link text-light" asp-area="Admin" asp-controller="Randevu" asp-action="Index">Randevular</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
 
-<div>
-    @if (User.IsInRole(SD.Role_Admin))
-    {
-        @* <div class="container-fluid"> *@
-        <div class="d-flex" id="wrapper">
-            <!-- Sidebar -->
-            <div id="sidebar" class="bg-dark">
-                <div class="p-4">
-                    <h1 class="navbar-brand">Admin Panel</h1>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <div class="d-flex align-items-center">
-                                <img src="~/icons/hospital-solid.svg" class="mr-2" />
-                                <a class="nav-link text-light" asp-area="Admin" asp-controller="Poliklinik" asp-action="Index">Poliklinikler</a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <div class="d-flex align-items-center">
-                                <img src="~/icons/user-doctor-solid.svg" class="mr-2" />
-                                <a class="nav-link text-light" asp-area="Admin" asp-controller="Doktor" asp-action="Index">Doktorlar</a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <div class="d-flex align-items-center">
-                                <img src="~/icons/user-solid.svg" class="mr-2" />
-                                <a class="nav-link text-light" asp-area="Admin" asp-controller="Kullanici" asp-action="Index">Kullanıcılar</a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <div class="d-flex align-items-center">
-                                <img src="~/icons/calendar-check-solid.svg" class="mr-2" />
-                                <a class="nav-link text-light" asp-area="Admin" asp-controller="Randevu" asp-action="Index">Randevular</a>
-                            </div>
-                        </li>
-                    </ul>
+                    <!-- Page Content -->
+                    <div id="content" class="w-100">
+                        <h2 class="mb-4">Poliklinikler Listesi</h2>
+                        <a asp-action="Create" class="btn btn-primary">Create New</a>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Adı</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.Adi)</td>
+                                            <td>
+                                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
+                                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <!-- Page Content -->
-            <div id="content" class="w-100">
-                <h2 class="mb-4">Poliklinikler Listesi</h2>
-                <a asp-action="Create" class="btn btn-primary">Create New</a>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Adi)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.AnaBilimDali)
-                                </th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Adi)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.AnaBilimDali.Adi)
-                                    </td>
-                                    <td>
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
-                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
-                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
-        @* </div> *@
-    }
-
-    <!-- Bootstrap Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</div>
+        }
+    </div>

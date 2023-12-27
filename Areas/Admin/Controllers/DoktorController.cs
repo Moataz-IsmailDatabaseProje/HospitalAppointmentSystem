@@ -60,7 +60,7 @@ namespace HastaneRandevuSistemi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Adi,Soyadi,CalismaGunleri,CalismaSaatleri,PoliklinikId")] Doktor doktor)
+        public async Task<IActionResult> Create([Bind("Id,Adi,Soyadi,PoliklinikId")] Doktor doktor)
         {
             if (ModelState.IsValid || true)
             {
@@ -94,7 +94,7 @@ namespace HastaneRandevuSistemi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Adi,Soyadi,CalismaGunleri,CalismaSaatleri,PoliklinikId")] Doktor doktor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Adi,Soyadi,PoliklinikId")] Doktor doktor)
         {
             if (id != doktor.Id)
             {
@@ -158,14 +158,14 @@ namespace HastaneRandevuSistemi.Controllers
             {
                 _context.Doktorlar.Remove(doktor);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool DoktorExists(int id)
         {
-          return (_context.Doktorlar?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Doktorlar?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

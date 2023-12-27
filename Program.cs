@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-var DbcConnection = "Server=(localdb)\\mssqllocaldb;Database=EFHastaneRandevu;Trusted_Connection=true;";
+var DbcConnection = "Server=(localdb)\\mssqllocaldb;Database=Hastane1;Trusted_Connection=true;";
 
 builder.Services.AddDbContext<EFHastaneRandevuContext>(options => options.UseSqlServer(DbcConnection));
 

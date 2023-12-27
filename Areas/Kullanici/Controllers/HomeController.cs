@@ -19,7 +19,7 @@ namespace HastaneRandevuSistemi.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var eFHastaneRandevuContext = _context.Randevular.Include(r => r.Doktor).Include(r => r.Kullanici);
+            var eFHastaneRandevuContext = _context.Randevular.Include(r => r.Doktor).Include(r => r.User);
             return View(await eFHastaneRandevuContext.ToListAsync());
         }
 

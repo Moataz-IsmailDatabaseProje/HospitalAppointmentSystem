@@ -22,23 +22,6 @@ namespace HastaneRandevuSistemi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("HastaneRandevuSistemi.Models.AnaBilimDali", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Adi")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AnaBilimDaliler");
-                });
-
             modelBuilder.Entity("HastaneRandevuSistemi.Models.Doktor", b =>
                 {
                     b.Property<int>("Id")
@@ -48,14 +31,6 @@ namespace HastaneRandevuSistemi.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Adi")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CalismaGunleri")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CalismaSaatleri")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -73,27 +48,6 @@ namespace HastaneRandevuSistemi.Migrations
                     b.ToTable("Doktorlar");
                 });
 
-            modelBuilder.Entity("HastaneRandevuSistemi.Models.Kullanici", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("KullaniciAdi")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Sifre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Kullaniciler");
-                });
-
             modelBuilder.Entity("HastaneRandevuSistemi.Models.Poliklinik", b =>
                 {
                     b.Property<int>("Id")
@@ -106,12 +60,7 @@ namespace HastaneRandevuSistemi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("AnaBilimDaliId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("AnaBilimDaliId");
 
                     b.ToTable("Poliklinikler");
                 });
@@ -127,17 +76,23 @@ namespace HastaneRandevuSistemi.Migrations
                     b.Property<int>("DoktorId")
                         .HasColumnType("int");
 
-                    b.Property<int>("KullaniciId")
+                    b.Property<int>("PoliklinikId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Tarih")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DoktorId");
 
-                    b.HasIndex("KullaniciId");
+                    b.HasIndex("PoliklinikId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Randevular");
                 });
@@ -293,12 +248,10 @@ namespace HastaneRandevuSistemi.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -335,12 +288,10 @@ namespace HastaneRandevuSistemi.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -379,17 +330,6 @@ namespace HastaneRandevuSistemi.Migrations
                     b.Navigation("Poliklinik");
                 });
 
-            modelBuilder.Entity("HastaneRandevuSistemi.Models.Poliklinik", b =>
-                {
-                    b.HasOne("HastaneRandevuSistemi.Models.AnaBilimDali", "AnaBilimDali")
-                        .WithMany("Poliklinikler")
-                        .HasForeignKey("AnaBilimDaliId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AnaBilimDali");
-                });
-
             modelBuilder.Entity("HastaneRandevuSistemi.Models.Randevu", b =>
                 {
                     b.HasOne("HastaneRandevuSistemi.Models.Doktor", "Doktor")
@@ -398,15 +338,23 @@ namespace HastaneRandevuSistemi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HastaneRandevuSistemi.Models.Kullanici", "Kullanici")
+                    b.HasOne("HastaneRandevuSistemi.Models.Poliklinik", "Poliklinik")
                         .WithMany("Randevular")
-                        .HasForeignKey("KullaniciId")
+                        .HasForeignKey("PoliklinikId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HastaneRandevuSistemi.Models.ApplicationUser", "User")
+                        .WithMany("Randevular")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Doktor");
 
-                    b.Navigation("Kullanici");
+                    b.Navigation("Poliklinik");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -460,17 +408,7 @@ namespace HastaneRandevuSistemi.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("HastaneRandevuSistemi.Models.AnaBilimDali", b =>
-                {
-                    b.Navigation("Poliklinikler");
-                });
-
             modelBuilder.Entity("HastaneRandevuSistemi.Models.Doktor", b =>
-                {
-                    b.Navigation("Randevular");
-                });
-
-            modelBuilder.Entity("HastaneRandevuSistemi.Models.Kullanici", b =>
                 {
                     b.Navigation("Randevular");
                 });
@@ -478,6 +416,13 @@ namespace HastaneRandevuSistemi.Migrations
             modelBuilder.Entity("HastaneRandevuSistemi.Models.Poliklinik", b =>
                 {
                     b.Navigation("Doktorlar");
+
+                    b.Navigation("Randevular");
+                });
+
+            modelBuilder.Entity("HastaneRandevuSistemi.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Randevular");
                 });
 #pragma warning restore 612, 618
         }

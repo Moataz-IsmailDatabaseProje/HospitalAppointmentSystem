@@ -6,12 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HastaneRandevuSistemi.Models;
-using Microsoft.AspNetCore.Authorization;
 
-namespace HastaneRandevuSistemi.Areas.Kullanici.Controllers
+namespace HastaneRandevuSistemi.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = SD.Role_Admin)]
     public class RandevuController : Controller
     {
         private readonly EFHastaneRandevuContext _context;
@@ -21,14 +19,14 @@ namespace HastaneRandevuSistemi.Areas.Kullanici.Controllers
             _context = context;
         }
 
-        // GET: Randevu
+        // GET: Admin/Randevu
         public async Task<IActionResult> Index()
         {
-            var eFHastaneRandevuContext = _context.Randevular.Include(r => r.Doktor).Include(r => r.Kullanici);
+            var eFHastaneRandevuContext = _context.Randevular.Include(r => r.Doktor).Include(r => r.Poliklinik).Include(r => r.User);
             return View(await eFHastaneRandevuContext.ToListAsync());
         }
 
-        // GET: Randevu/Details/5
+        // GET: Admin/Randevu/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Randevular == null)
@@ -38,7 +36,8 @@ namespace HastaneRandevuSistemi.Areas.Kullanici.Controllers
 
             var randevu = await _context.Randevular
                 .Include(r => r.Doktor)
-                .Include(r => r.Kullanici)
+                .Include(r => r.Poliklinik)
+                .Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (randevu == null)
             {
@@ -48,20 +47,21 @@ namespace HastaneRandevuSistemi.Areas.Kullanici.Controllers
             return View(randevu);
         }
 
-        // GET: Randevu/Create
+        // GET: Admin/Randevu/Create
         public IActionResult Create()
         {
             ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Adi");
-            ViewData["KullaniciId"] = new SelectList(_context.Kullaniciler, "Id", "KullaniciAdi");
+            ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "Adi");
+            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "UserName");
             return View();
         }
 
-        // POST: Randevu/Create
+        // POST: Admin/Randevu/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Tarih,DoktorId,KullaniciId")] Randevu randevu)
+        public async Task<IActionResult> Create([Bind("Id,Tarih,DoktorId,UserId,PoliklinikId")] Randevu randevu)
         {
             if (ModelState.IsValid || true)
             {
@@ -70,11 +70,12 @@ namespace HastaneRandevuSistemi.Areas.Kullanici.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Adi", randevu.DoktorId);
-            ViewData["KullaniciId"] = new SelectList(_context.Kullaniciler, "Id", "KullaniciAdi", randevu.KullaniciId);
+            ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "Adi", randevu.PoliklinikId);
+            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "UserName", randevu.UserId);
             return View(randevu);
         }
 
-        // GET: Randevu/Edit/5
+        // GET: Admin/Randevu/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Randevular == null)
@@ -88,16 +89,17 @@ namespace HastaneRandevuSistemi.Areas.Kullanici.Controllers
                 return NotFound();
             }
             ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Adi", randevu.DoktorId);
-            ViewData["KullaniciId"] = new SelectList(_context.Kullaniciler, "Id", "KullaniciAdi", randevu.KullaniciId);
+            ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "Adi", randevu.PoliklinikId);
+            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "UserName", randevu.UserId);
             return View(randevu);
         }
 
-        // POST: Randevu/Edit/5
+        // POST: Admin/Randevu/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Tarih,DoktorId,KullaniciId")] Randevu randevu)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Tarih,DoktorId,UserId,PoliklinikId")] Randevu randevu)
         {
             if (id != randevu.Id)
             {
@@ -125,11 +127,12 @@ namespace HastaneRandevuSistemi.Areas.Kullanici.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Adi", randevu.DoktorId);
-            ViewData["KullaniciId"] = new SelectList(_context.Kullaniciler, "Id", "KullaniciAdi", randevu.KullaniciId);
+            ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "Adi", randevu.PoliklinikId);
+            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "UserName", randevu.UserId);
             return View(randevu);
         }
 
-        // GET: Randevu/Delete/5
+        // GET: Admin/Randevu/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Randevular == null)
@@ -139,7 +142,8 @@ namespace HastaneRandevuSistemi.Areas.Kullanici.Controllers
 
             var randevu = await _context.Randevular
                 .Include(r => r.Doktor)
-                .Include(r => r.Kullanici)
+                .Include(r => r.Poliklinik)
+                .Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (randevu == null)
             {
@@ -149,7 +153,7 @@ namespace HastaneRandevuSistemi.Areas.Kullanici.Controllers
             return View(randevu);
         }
 
-        // POST: Randevu/Delete/5
+        // POST: Admin/Randevu/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -163,14 +167,14 @@ namespace HastaneRandevuSistemi.Areas.Kullanici.Controllers
             {
                 _context.Randevular.Remove(randevu);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool RandevuExists(int id)
         {
-            return (_context.Randevular?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Randevular?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

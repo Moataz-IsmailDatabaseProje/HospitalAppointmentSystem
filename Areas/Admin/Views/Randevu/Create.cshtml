@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Create";
 }
+
 <div class="container">
     <h1>Create</h1>
 
@@ -18,16 +19,16 @@
                     <span asp-validation-for="Tarih" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="DoktorId" class="control-label"></label>
-                    <select asp-for="DoktorId" class="form-control" asp-items="ViewBag.DoktorId"></select>
+                    <label asp-for="PoliklinikId" class="control-label">Poliklinik</label>
+                    <select asp-for="PoliklinikId" class="form-control" asp-items="ViewBag.PoliklinikId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DoktorId" class="control-label">Doktor</label>
+                    <select asp-for="DoktorId" class="form-control" id="DoktorId"></select>
                 </div>
                 <div class="form-group">
                     <label asp-for="UserId" class="control-label"></label>
                     <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-                </div>
-                <div class="form-group">
-                    <label asp-for="PoliklinikId" class="control-label"></label>
-                    <select asp-for="PoliklinikId" class="form-control" asp-items="ViewBag.PoliklinikId"></select>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Create" class="btn btn-primary" />
@@ -40,8 +41,31 @@
         <a asp-action="Index">Back to List</a>
     </div>
 </div>
+
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <script>
+        $(document).ready(function () {
+            loadDoctors();
+        });
+
+        $("#PoliklinikId").change(function () {
+            loadDoctors();
+        });
+
+        var loadDoctors = function () {
+            $.ajax({
+                url: '@Url.Action("GetDoctors", "Randevu")',
+                type: 'GET',
+                data: {
+                    poliklinikId: $('#PoliklinikId').val(),
+                },
+                success: function (data) {
+                    $('#DoktorId').empty();
+                    $(data).each(function (index, item) {
+                        $('#DoktorId').append('<option value="' + item.doctorId + '">' + item.doctorName + '</option>');
+                    });
+                }
+            });
+        };
+    </script>
 }

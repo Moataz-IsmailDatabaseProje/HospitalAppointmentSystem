@@ -53,6 +53,14 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
             ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Adi");
             ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "Adi");
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "UserName");
+
+            // Populate PoliklinikId dropdown
+            ViewBag.PoliklinikId = new SelectList(_context.Poliklinikler, "Id", "Adi");
+            // Initialize DoktorId dropdown (empty for now)
+            ViewBag.DoktorId = new SelectList(_context.Doktorlar, "Id", "Adi");
+            // Populate UserId dropdown (you'll need to implement this based on your user data)
+            ViewBag.UserId = new SelectList(_context.ApplicationUsers, "Id", "UserName");
+
             return View();
         }
 
@@ -176,5 +184,22 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
         {
           return (_context.Randevular?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        [HttpGet]
+        public IActionResult GetDoctors(int poliklinikId)
+        {
+            var doctors = _context.Doktorlar
+                .Where(d => d.PoliklinikId == poliklinikId)
+                .Select(d => new
+                {
+                    doctorId = d.Id,
+                    doctorName = $"{d.Adi} {d.Soyadi}"
+                })
+                .ToList();
+
+            return Json(doctors);
+        }
+
+
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace HastaneRandevuSistemi.Models
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Serialization;
+
+namespace HastaneRandevuSistemi.Models
 {
     public class Poliklinik
     {
@@ -6,8 +9,11 @@
         public string Adi { get; set; }
 
         // Poliklinik ile Doktor arasında birçok ilişki olabilir
-        public List<Doktor> Doktorlar { get; set; }
-        public List<Randevu> Randevular { get; set; }
+
+        [JsonIgnore]
+        public List<Doktor> Doktorlar { get; set; } = new List<Doktor>();
+        [JsonIgnore]
+        public List<Randevu> Randevular { get; set; } = new List<Randevu>();
     }
 
 }

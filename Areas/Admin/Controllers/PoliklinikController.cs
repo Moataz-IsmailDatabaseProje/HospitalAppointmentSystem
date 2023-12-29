@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HastaneRandevuSistemi.Models;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace HastaneRandevuSistemi.Areas.Admin.Controllers
 {
@@ -22,10 +24,35 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
         // GET: Admin/Poliklinik
         public async Task<IActionResult> Index()
         {
-              return _context.Poliklinikler != null ? 
-                          View(await _context.Poliklinikler.ToListAsync()) :
-                          Problem("Entity set 'EFHastaneRandevuContext.Poliklinikler'  is null.");
+            List<Poliklinik> polikliniks = new List<Poliklinik>();
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    var response = await client.GetAsync("http://localhost:5107/api/PoliklinikApi");
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var jsonResponse = await response.Content.ReadAsStringAsync();
+                        polikliniks = JsonConvert.DeserializeObject<List<Poliklinik>>(jsonResponse);
+                    }
+                    else
+                    {
+                        // Handle API error accordingly
+                        return View("Error");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception as needed
+                return View("Error");
+            }
+
+            return View(polikliniks != null ? polikliniks : new List<Poliklinik>());
         }
+
 
         // GET: Admin/Poliklinik/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -35,15 +62,25 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var poliklinik = await _context.Poliklinikler
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (poliklinik == null)
+            try
             {
-                return NotFound();
-            }
+                var poliklinik = await _context.Poliklinikler
+                    .FirstOrDefaultAsync(m => m.Id == id);
 
-            return View(poliklinik);
+                if (poliklinik == null)
+                {
+                    return NotFound();
+                }
+
+                return View(poliklinik);
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception as needed
+                return View("Error");
+            }
         }
+
 
         // GET: Admin/Poliklinik/Create
         public IActionResult Create()
@@ -58,19 +95,47 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Adi")] Poliklinik poliklinik)
         {
-            if (ModelState.IsValid || true)
+            try
             {
-                _context.Add(poliklinik);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    using (HttpClient client = new HttpClient())
+                    {
+                        var content = new StringContent(JsonConvert.SerializeObject(poliklinik), Encoding.UTF8, "application/json");
+
+                        var response = await client.PostAsync("http://localhost:5107/api/PoliklinikApi", content);
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            // Successfully created, you can handle the response if needed
+                            return RedirectToAction(nameof(Index));
+                        }
+                        else
+                        {
+                            // Handle API error accordingly
+                            return View("Error");
+                        }
+                    }
+                }
+                else
+                {
+                    // Handle invalid model state (e.g., validation errors)
+                    return View(poliklinik);
+                }
             }
-            return View(poliklinik);
+            catch (Exception ex)
+            {
+                // Log or handle the exception as needed
+                Console.WriteLine(ex.ToString());
+                return View("Error");
+            }
         }
+
 
         // GET: Admin/Poliklinik/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Poliklinikler == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -80,12 +145,11 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+
             return View(poliklinik);
         }
 
         // POST: Admin/Poliklinik/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Adi")] Poliklinik poliklinik)
@@ -95,10 +159,11 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid || true)
+            if (ModelState.IsValid)
             {
                 try
                 {
+                    // Update the existing entity with the changes
                     _context.Update(poliklinik);
                     await _context.SaveChangesAsync();
                 }
@@ -128,6 +193,7 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
 
             var poliklinik = await _context.Poliklinikler
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (poliklinik == null)
             {
                 return NotFound();
@@ -141,19 +207,34 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Poliklinikler == null)
+            try
             {
-                return Problem("Entity set 'EFHastaneRandevuContext.Poliklinikler'  is null.");
+                using (HttpClient client = new HttpClient())
+                {
+                    var response = await client.DeleteAsync($"http://localhost:5107/api/PoliklinikApi/{id}");
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        // Successfully deleted, redirect to Index
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        // Handle API error
+                        return View("Error");
+                    }
+                }
             }
-            var poliklinik = await _context.Poliklinikler.FindAsync(id);
-            if (poliklinik != null)
+            catch (Exception ex)
             {
-                _context.Poliklinikler.Remove(poliklinik);
+                // Log or handle the exception
+                Console.WriteLine(ex.ToString());
+                return View("Error");
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
+
+
+
 
         private bool PoliklinikExists(int id)
         {

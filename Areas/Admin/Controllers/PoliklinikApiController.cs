@@ -51,17 +51,23 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
         [HttpPut("{id}")]
         public ActionResult<Poliklinik> Put(int id, [FromBody] Poliklinik poliklinikFromApi)
         {
+            var existingPoliklinik = _context.Poliklinikler.FirstOrDefault(y => y.Id == id);
 
-            var pol1 = _context.Poliklinikler.FirstOrDefault(y => y.Id == id);
-            if (pol1 is null)
-                return NotFound();
-            else
+            if (existingPoliklinik == null)
             {
-                pol1.Id = poliklinikFromApi.Id;
-                pol1.Adi = poliklinikFromApi.Adi;
-                return pol1;
+                return NotFound(); // Return a 404 response if the entity with the given id is not found
             }
+
+            // Update only the necessary properties
+            existingPoliklinik.Adi = poliklinikFromApi.Adi;
+
+            // Save changes to the database
+            _context.SaveChanges();
+
+            // Return the updated entity
+            return existingPoliklinik;
         }
+
 
         // DELETE api/<PoliklinikApiController>/5
         [HttpDelete("{id}")]

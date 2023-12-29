@@ -54,25 +54,37 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
         }
 
 
-        // GET: Admin/Poliklinik/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Poliklinikler == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
             try
             {
-                var poliklinik = await _context.Poliklinikler
-                    .FirstOrDefaultAsync(m => m.Id == id);
-
-                if (poliklinik == null)
+                using (HttpClient client = new HttpClient())
                 {
-                    return NotFound();
-                }
+                    var response = await client.GetAsync($"http://localhost:5107/api/PoliklinikApi/{id}");
 
-                return View(poliklinik);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var jsonResponse = await response.Content.ReadAsStringAsync();
+                        var poliklinik = JsonConvert.DeserializeObject<Poliklinik>(jsonResponse);
+
+                        if (poliklinik == null)
+                        {
+                            return NotFound();
+                        }
+
+                        return View(poliklinik);
+                    }
+                    else
+                    {
+                        // Handle API error accordingly
+                        return View("Error");
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -80,6 +92,7 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
                 return View("Error");
             }
         }
+
 
 
         // GET: Admin/Poliklinik/Create
@@ -159,29 +172,37 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+         
                 try
                 {
-                    // Update the existing entity with the changes
-                    _context.Update(poliklinik);
-                    await _context.SaveChangesAsync();
+                    using (HttpClient client = new HttpClient())
+                    {
+                        var content = new StringContent(JsonConvert.SerializeObject(poliklinik), Encoding.UTF8, "application/json");
+
+                        // Make a PUT request to the API endpoint
+                        var response = await client.PutAsync($"http://localhost:5107/api/PoliklinikApi/{id}", content);
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            return RedirectToAction(nameof(Index));
+                        }
+                        else
+                        {
+                            // Handle API error accordingly
+                            return View("Error");
+                        }
+                    }
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception ex)
                 {
-                    if (!PoliklinikExists(poliklinik.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    // Log or handle the exception as needed
+                    Console.WriteLine(ex.ToString());
+                    return View("Error");
                 }
-                return RedirectToAction(nameof(Index));
-            }
+
             return View(poliklinik);
         }
+
 
         // GET: Admin/Poliklinik/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -203,7 +224,7 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
         }
 
         // POST: Admin/Poliklinik/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -211,6 +232,7 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    // Make a DELETE request to the API
                     var response = await client.DeleteAsync($"http://localhost:5107/api/PoliklinikApi/{id}");
 
                     if (response.IsSuccessStatusCode)
@@ -232,6 +254,7 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
                 return View("Error");
             }
         }
+
 
 
 

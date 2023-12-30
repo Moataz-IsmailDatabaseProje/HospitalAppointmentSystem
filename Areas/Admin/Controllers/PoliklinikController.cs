@@ -8,6 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using HastaneRandevuSistemi.Models;
 using Newtonsoft.Json;
 using System.Text;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
+using Microsoft.Extensions.Localization;
+using System.Globalization;
 
 namespace HastaneRandevuSistemi.Areas.Admin.Controllers
 {
@@ -15,8 +21,7 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
     public class PoliklinikController : Controller
     {
         private readonly EFHastaneRandevuContext _context;
-
-        public PoliklinikController(EFHastaneRandevuContext context)
+        public PoliklinikController(EFHastaneRandevuContext context, IStringLocalizer<PoliklinikController> stringLocalizer)
         {
             _context = context;
         }
@@ -254,8 +259,6 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
                 return View("Error");
             }
         }
-
-
 
 
 

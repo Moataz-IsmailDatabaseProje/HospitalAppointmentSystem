@@ -1,75 +1,83 @@
-﻿@model IEnumerable<HastaneRandevuSistemi.Models.Poliklinik>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer localizer
+@model IEnumerable<HastaneRandevuSistemi.Models.Poliklinik>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = localizer["Index"];
 }
-    <div>
-        @if (User.IsInRole(SD.Role_Admin))
-        {
-            <div class="container-fluid">
-                <div class="d-flex" id="wrapper">
-                    <!-- Sidebar -->
-                    <div id="sidebar" class="bg-dark">
-                        <div class="p-4">
-                            <h1 class="navbar-brand">Admin Panel</h1>
-                            <ul class="nav flex-column">
-                                <li class="nav-item">
-                                    <div class="d-flex align-items-center">
-                                        <img src="~/icons/hospital-solid.svg" class="mr-2" />
-                                        <a class="nav-link text-light" asp-area="Admin" asp-controller="Poliklinik" asp-action="Index">Poliklinikler</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item">
-                                    <div class="d-flex align-items-center">
-                                        <img src="~/icons/user-doctor-solid.svg" class="mr-2" />
-                                        <a class="nav-link text-light" asp-area="Admin" asp-controller="Doktor" asp-action="Index">Doktorlar</a>
-                                    </div>
-                                </li>
-                                @*     <li class="nav-item">
-                            <div class="d-flex align-items-center">
-                            <img src="~/icons/user-solid.svg" class="mr-2" />
-                            <a class="nav-link text-light" asp-area="Admin" asp-controller="Kullanici" asp-action="Index">Kullanıcılar</a>
-                            </div>
-                            </li> *@
-                                <li class="nav-item">
-                                    <div class="d-flex align-items-center">
-                                        <img src="~/icons/calendar-check-solid.svg" class="mr-2" />
-                                        <a class="nav-link text-light" asp-area="Admin" asp-controller="Randevu" asp-action="Index">Randevular</a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
 
-                    <!-- Page Content -->
-                    <div id="content" class="w-100">
-                        <h2 class="mb-4">Poliklinikler Listesi</h2>
-                        <a asp-action="Create" class="btn btn-primary">Yeni Oluştur</a>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>Adı</th>
-                                    <th>Hareketler</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model)
-                                    {
-                                        <tr>
-                                            <td>@Html.DisplayFor(modelItem => item.Adi)</td>
-                                            <td>
-                                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Düzelt</a>
-                                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detaylar</a>
-                                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Sil</a>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
+<div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <!-- Language Change Dropdown -->
+       <ul class="navbar-nav">
+           <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                    @Thread.CurrentThread.CurrentUICulture.Name
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDown">
+                    <li><a class="dropdown-item" href="Poliklinik/Lang?culture=en">En</a></li>
+                    <li><a class="dropdown-item" href="Poliklinik/Lang?culture=tr">Tr</a></li>
+                </ul>
+           </li>
+       </ul>
+        <!-- End Language Change Dropdown -->
+    </nav>
+
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar" class="bg-dark">
+            <div class="p-4">
+                <h1 class="navbar-brand">Admin Panel</h1>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <div class="d-flex align-items-center">
+                            <img src="~/icons/hospital-solid.svg" class="mr-2" />
+                            <a class="nav-link text-light" asp-area="Admin" asp-controller="Poliklinik" asp-action="Index">@localizer["Poliklinik"]</a>
                         </div>
-                    </div>
-                </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="d-flex align-items-center">
+                            <img src="~/icons/user-doctor-solid.svg" class="mr-2" />
+                            <a class="nav-link text-light" asp-area="Admin" asp-controller="Doktor" asp-action="Index">@localizer["Doktorlar"]</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="d-flex align-items-center">
+                            <img src="~/icons/calendar-check-solid.svg" class="mr-2" />
+                            <a class="nav-link text-light" asp-area="Admin" asp-controller="Randevu" asp-action="Index">@localizer["Randevular"]</a>
+                        </div>
+                    </li>
+                </ul>
             </div>
-        }
+        </div>
+
+        <!-- Page Content -->
+        <div id="content" class="w-100">
+            <h2 class="mb-4">@localizer["Poliklinikler Listesi"]</h2>
+            <a asp-action="Create" class="btn btn-primary">@localizer["Yeni Oluştur"]</a>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>@localizer["Adı"]</th>
+                            <th>@localizer["Hareketler"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Adi)</td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">@localizer["Düzelt"]</a>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">@localizer["Detaylar"]</a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">@localizer["Sil"]</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+</div>

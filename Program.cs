@@ -2,12 +2,40 @@ using HastaneRandevuSistemi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc.Razor;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Options;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 //var connectionString = builder.Configuration.GetConnectionString("EFHastaneRandevuContextConnection") ?? throw new InvalidOperationException("Connection string 'EFHastaneRandevuContextConnection' not found.");
 
+//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+//        .AddCookie(options =>
+//        {
+//            options.Cookie.Name = "Language";
+//            options.LoginPath = "/Account/Login"; // Adjust as needed
+//            options.AccessDeniedPath = "/Account/AccessDenied"; // Adjust as needed
+//        });
+
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+//builder.Services.AddControllersWithViews().AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
+builder.Services.AddLocalization(options =>
+{
+    options.ResourcesPath = "Resources";
+});
+//builder.Services.Configure<RequestLocalizationOptions>(options =>
+//{
+//    var supportedCultures = new[]
+//    {
+//        new CultureInfo("en-US"),
+//        new CultureInfo("tr")
+//    };
+//    options.DefaultRequestCulture = new RequestCulture("tr");
+//    options.SupportedCultures = supportedCultures;
+//});
 
 var DbcConnection = "Server=(localdb)\\mssqllocaldb;Database=Hastane1;Trusted_Connection=true;";
 
@@ -21,10 +49,17 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = $"/Identity/Account/Logout";
     options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
 });
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages().AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix).AddDataAnnotationsLocalization();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 var app = builder.Build();
+
+var supportedCultures = new[] { "tr", "en" };
+var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

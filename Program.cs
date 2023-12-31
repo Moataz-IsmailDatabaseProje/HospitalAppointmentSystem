@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 //var connectionString = builder.Configuration.GetConnectionString("EFHastaneRandevuContextConnection") ?? throw new InvalidOperationException("Connection string 'EFHastaneRandevuContextConnection' not found.");
@@ -26,6 +27,8 @@ builder.Services.AddLocalization(options =>
 {
     options.ResourcesPath = "Resources";
 });
+
+
 //builder.Services.Configure<RequestLocalizationOptions>(options =>
 //{
 //    var supportedCultures = new[]
@@ -41,7 +44,7 @@ var DbcConnection = "Server=(localdb)\\mssqllocaldb;Database=Hastane1;Trusted_Co
 
 builder.Services.AddDbContext<EFHastaneRandevuContext>(options => options.UseSqlServer(DbcConnection));
 
-builder.Services.AddIdentity<IdentityUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<EFHastaneRandevuContext>().AddDefaultTokenProviders();
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -52,9 +55,20 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddRazorPages().AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix).AddDataAnnotationsLocalization();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
+//builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+//{
+//    options.SignIn.RequireConfirmedAccount = true;
+//    options.Password.RequireDigit = false;
+//    options.Password.RequireLowercase = false;
+//    options.Password.RequireNonAlphanumeric = false;
+//    options.Password.RequireUppercase = false;
+//    options.Password.RequiredLength = 3;
+//})
+//.AddRoles<IdentityRole>().AddEntityFrameworkStores<EFHastaneRandevuContext>().AddDefaultTokenProviders();
+
 var app = builder.Build();
 
-var supportedCultures = new[] { "tr", "en" };
+var supportedCultures = new[] { "en", "tr" };
 var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
     .AddSupportedCultures(supportedCultures)
     .AddSupportedUICultures(supportedCultures);

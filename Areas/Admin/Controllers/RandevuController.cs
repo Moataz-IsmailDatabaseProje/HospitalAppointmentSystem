@@ -6,10 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HastaneRandevuSistemi.Models;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HastaneRandevuSistemi.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class RandevuController : Controller
     {
         private readonly EFHastaneRandevuContext _context;
@@ -18,6 +21,21 @@ namespace HastaneRandevuSistemi.Areas.Admin.Controllers
         {
             _context = context;
         }
+
+        //public void OnGet()
+        //{
+        //    string? culture = Request.Query["culture"];
+        //    Console.WriteLine("new selected language " + culture);
+        //    if (culture != null)
+        //    {
+        //        Response.Cookies.Append(CookieRequestCultureProvider.DefaultCookieName,
+        //            CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+        //            new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) });
+
+        //    }
+        //    string returnUrl = Request.Headers["Referer"].ToString() ?? "/kullanici/index";
+        //    Response.Redirect(returnUrl);
+        //}
 
         // GET: Admin/Randevu
         public async Task<IActionResult> Index()

@@ -14,10 +14,12 @@ using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using Microsoft.Extensions.Localization;
 using System.Globalization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HastaneRandevuSistemi.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class PoliklinikController : Controller
     {
         private readonly EFHastaneRandevuContext _context;

@@ -7,32 +7,16 @@
 }
 
 <div class="container-fluid">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <!-- Language Change Dropdown -->
-       <ul class="navbar-nav">
-           <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                    @Thread.CurrentThread.CurrentUICulture.Name
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDown">
-                    <li><a class="dropdown-item" href="Poliklinik/Lang?culture=en">En</a></li>
-                    <li><a class="dropdown-item" href="Poliklinik/Lang?culture=tr">Tr</a></li>
-                </ul>
-           </li>
-       </ul>
-        <!-- End Language Change Dropdown -->
-    </nav>
-
     <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
         <div id="sidebar" class="bg-dark">
             <div class="p-4">
-                <h1 class="navbar-brand">Admin Panel</h1>
+                <h1 class="navbar-brand">@localizer["Admin Panel"]</h1>
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <div class="d-flex align-items-center">
                             <img src="~/icons/hospital-solid.svg" class="mr-2" />
-                            <a class="nav-link text-light" asp-area="Admin" asp-controller="Poliklinik" asp-action="Index">@localizer["Poliklinik"]</a>
+                            <a class="nav-link text-light" asp-area="Admin" asp-controller="Poliklinik" asp-action="Index">@localizer["Poliklinikler"]</a>
                         </div>
                     </li>
                     <li class="nav-item">

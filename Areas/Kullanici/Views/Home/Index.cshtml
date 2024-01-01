@@ -1,7 +1,7 @@
 ﻿@using System.Security.Claims;
 @model IEnumerable<HastaneRandevuSistemi.Models.Randevu>
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = localizer["Home Page"];
 }
 
 @* <div class="text-center"> *@
@@ -10,17 +10,17 @@
         @* <div id="userPage" class="page"> *@
           
             <!-- Appointment Button -->
-          
-             @if (User.IsInRole(SD.Role_Kullanici))
+
+@if (User.IsInRole(SD.Role_Kullanici))
             {
                 <div class="container mt-4">
 
                     <!-- Welcome Section -->
                     <div class="jumbotron">
-                        <h1 class="display-4">Online Randevu Alın!</h1>
-                        <p class="lead">Sağlık hizmeti için online randevu almak hiç bu kadar kolay olmamıştı.</p>
+                        <h1 class="display-4">@localizer["Online Randevu Alın!"]</h1>
+            <p class="lead">@localizer["slogu"]</p>
                         <a class="btn btn-primary" asp-area="Kullanici" asp-controller="Home" asp-action="Create">
-                            Randevu Al
+                            @localizer["Randevu Al"]
                         </a>
                         <br />
                         <br />
@@ -34,7 +34,7 @@
             <table class="table table-bordered table-striped">
                 <thead class="thead-dark">
                     <tr>
-                        <th colspan="3">Alınan Randevular</th>
+                        <th colspan="3">@localizer["Alınan Randevular"]</th>
                     </tr>
                     <tr>
                         <th>
@@ -57,9 +57,9 @@
                                 @Html.DisplayFor(modelItem => item.Doktor.Adi)
                             </td>
                             <td>
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a> |
-                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a> |
-                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">@localizer["Düzelt"]</a> |
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">@localizer["Detaylar"]</a> |
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">@localizer["Sil"]</a>
                             </td>
                         </tr>
                     }
@@ -73,7 +73,7 @@
 
             @if (User.IsInRole(SD.Role_Admin))
             {
-                <div class="d-flex" id="">
+    <div class="d-flex" id="wrapper">
                     <!-- Sidebar -->
                     <div id="sidebar" class="bg-dark">
                         <div class="p-4">
@@ -82,7 +82,7 @@
                                     <li class="nav-item">
                                         <div class="d-flex align-items-center">
                                             <img src="~/icons/hospital-solid.svg" class="mr-2" />
-                                            <a class="nav-link text-light" asp-area="Admin" asp-controller="Poliklinik" asp-action="Index">Poliklinikler</a>
+                                            <a class="nav-link text-light" asp-area="Admin" asp-controller="Poliklinik" asp-action="Index">@localizer["Poliklinikler"]</a>
                                         </div>
                                     </li>
                                     <li class="nav-item">
@@ -108,13 +108,16 @@
                         </div>
                     </div>
 
-                    <!-- Page Content -->
-                    <p>Alınan Randevular burda olacak</p>
+        <div class="alert alert-primary d-flex align-items-center" role="alert">
+            <div class="flex-grow-1">
+                <h4 class="alert-heading">@localizer["Welcome to the Dashboard!"]</h4>
+                <p>@localizer["You can modify polyclinics, doctors, and appointments here."]</p>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
                 </div>
 
-                <!-- Bootstrap Scripts -->
-                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+              
 
                 <!-- Sidebar Toggle Script -->
                 <script>

@@ -99,7 +99,7 @@ namespace HastaneRandevuSistemi.Controllers
                 ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "UserName", randevu.UserId);
                 ViewBag.PoliklinikAdi = new SelectList(_context.Poliklinikler, "Id", "Adi", randevu.PoliklinikId);
                 ViewBag.DoktorAdi = new SelectList(_context.Doktorlar, "Id", "Adi", randevu.DoktorId);
-                ViewBag.UserName = new SelectList(_context.ApplicationUsers, "Id", "UserName", randevu.UserId);
+                ViewBag.UserName = new SelectList(_context.ApplicationUsers, "Id", "UserName", randevu.UserId); 
 
                 return View(randevu);
             }
